@@ -1,0 +1,46 @@
+﻿@model MyFriends.Models.Friend
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>@("פרטי חבר " + Model.Fullname)</h1>
+
+<div>
+    <h4>@Model.FirstName</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.PhoneNumber)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.PhoneNumber)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.EmailAddress)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.EmailAddress)
+        </dd>
+        
+        @if (Model.Images.Count > 0)
+        {
+            foreach (Image img in Model.Images)
+            {
+                if (img.MyImage != null)
+                {
+                    <dd class="col-sm-10">
+                        <img src="data:image; base64, @System.Convert.ToBase64String(img.MyImage)" width="80"/>
+                    </dd>
+                }
+            }
+        }
+    </dl>
+</div>
+<hr />
+<button onclick="addImage()">הוסף תמונה לחבר</button>
+<div id="addImageId" style="display:none">Form for adding new image</div>
+<div>
+    @Html.ActionLink("Edit", "Edit", new {  id = Model.Id }) |
+    <a asp-action="Friends">בחזרה לרשימת החברים</a>
+</div>
