@@ -30,12 +30,12 @@ namespace MyFriends.Controllers
 
             return View(friends);
         }
-        // פונקציה שמעבירה לנתיב ליצירת חבר
+        // פונקציה שמחזירה תצוגה ליצירת חבר
         public IActionResult Create()
         {
             return View(new Friend());
         }
-
+        // פונקציה שמוסיפה חבר חדש לרשימה ושומרת את השינויים
         [HttpPost,ValidateAntiForgeryToken]
         public IActionResult AddFriend(Friend friend)
         {
@@ -43,6 +43,7 @@ namespace MyFriends.Controllers
             Data.Get.SaveChanges();
             return RedirectToAction("Friends");
         }
+
         public IActionResult Details(int? id) 
         {
             if (id == null)
@@ -57,6 +58,25 @@ namespace MyFriends.Controllers
             }
 
             return View(friend);
+
+        }
+        [HttpPost, ValidateAntiForgeryToken]
+        public IActionResult AddNewImage(Friend friend)
+        {
+            Friend? friendFromDb = Data.Get.Friends.FirstOrDefault(f => f.Id == friend.Id);
+            if (friendFromDb == null)
+            {
+                return NotFound();
+            }
+            byte[] ? firstImage = friend.Images.First().MyImage;
+            if (firstImage == null) 
+            {
+                return NotFound();
+            }
+
+            friendFromDb.AddImage(firstImage);
+            Data.Get.SaveChanges();
+            return RedirectToAction("Details", new { id = friend.Id });
 
         }
         public IActionResult Edit(int? id)
